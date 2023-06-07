@@ -9,8 +9,17 @@ export function login(data) {
   })
 }
 
-export function getInfo(token) {
+export function getUserInfo() {
+  return request({
+    method: 'POST',
+    url: '/sys/profile'
+  })
+}
 
+export function getUserDetailById(id) {
+  return request({
+    url: `/sys/user/${id}`
+  })
 }
 
 export function logout() {

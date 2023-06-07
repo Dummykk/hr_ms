@@ -86,13 +86,35 @@
 
 import axios from 'axios'
 import { Message } from 'element-ui'
+import store from '@/store'
+import { getTimeStamp } from './auth'
+import router from '@/router'
+
+const TimeOut = 3600
 
 // 创建一个带有请求拦截器和响应拦截器的axios实例并导出
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
   timeout: 5000
 }) // 创建一个axios的实例
-service.interceptors.request.use() // 请求拦截器
+
+// 请求拦截器
+service.interceptors.request.use(config => {
+  // 注入token
+  if (store.getters.token) {
+    if (isTimeOut()) {
+      store.dispatch('user/logout')
+      router.push('/login')
+      return Promise.reject(new Error('token超时了'))
+    }
+    config.headers['Authorization'] = `Bearer ${store.getters.token}`
+  }
+  return config // config是配置信息，必须要返回
+}, error => {
+  return Promise.reject(error)
+})
+
+// 响应拦截器
 service.interceptors.response.use(response => {
   const { success, message, data } = response.data
   if (success) {
@@ -102,8 +124,19 @@ service.interceptors.response.use(response => {
     return Promise.reject(new Error(message))
   }
 }, error => {
-  Message.error(error.message)
+  if (error.response && error.response.data && error.response.data.code === 10002) {
+    store.dispatch('user/logout')
+    router.push('/login')
+  } else {
+    Message.error(error.message)
+  }
   return Promise.reject(error)
-}) // 响应拦截器
+})
+
+function isTimeOut() {
+  var currentTime = Date.now()
+  var timeStamp = getTimeStamp()
+  return (currentTime - timeStamp) / 1000 > TimeOut
+}
 
 export default service // 导出axios实例

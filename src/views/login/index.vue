@@ -60,7 +60,7 @@
       >登 录</el-button>
 
       <div class="tips">
-        <span style="margin-right: 20px">账号: 13800000000</span>
+        <span style="margin-right: 20px">账号: 13600000001</span>
         <span> 密码: 123456</span>
       </div>
     </el-form>
@@ -84,7 +84,7 @@ export default {
 
     return {
       loginForm: {
-        mobile: '13800000000',
+        mobile: '13600000001',
         password: '123456'
       },
       loginRules: {
@@ -94,7 +94,7 @@ export default {
         ],
         password: [
           { required: true, trigger: 'blur', message: '密码不能为空' },
-          { min: 6, max: 16, trigger: 'blur', message: '密码长度在6-16位之间' }
+          { min: 6, max: 30, trigger: 'blur', message: '密码长度在6-16位之间' }
         ]
       },
       loading: false,
