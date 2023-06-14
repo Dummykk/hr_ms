@@ -41,10 +41,8 @@
       </el-form-item>
     </el-form>
     <el-row slot="footer" type="flex" justify="center">
-      <el-col :span="6">
-        <el-button type="primary" size="small" @click="btnOK">确定</el-button>
-        <el-button size="small" @click="btnCancel">取消</el-button>
-      </el-col>
+      <el-button type="primary" size="small" @click="btnOK">确定</el-button>
+      <el-button size="small" @click="btnCancel">取消</el-button>
     </el-row>
   </el-dialog>
 </template>
@@ -61,6 +59,10 @@ export default {
     treeNode: {
       type: Object,
       default: null
+    },
+    dialogTitle: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -130,12 +132,6 @@ export default {
         ]
       },
       managers: []
-    }
-  },
-
-  computed: {
-    dialogTitle() {
-      return this.formData.id ? '编辑部门' : '添加子部门'
     }
   },
 

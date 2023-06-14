@@ -11,7 +11,7 @@
         >
           <tree-tools slot-scope="{ data }" :tree-node="data" @delDept="getDepartments" @addDept="addDept" @editDept="editDept" />
         </el-tree>
-        <add-dept ref="addDept" :show-dialog.sync="showDialog" :tree-node="node" @addDept="getDepartments" />
+        <add-dept ref="addDept" :show-dialog.sync="showDialog" :tree-node="node" :dialog-title="dialogTitle" @addDept="getDepartments" />
       </el-card>
     </div>
   </div>
@@ -36,7 +36,8 @@ export default {
       },
       showDialog: false,
       node: null,
-      loading: false
+      loading: false,
+      dialogTitle: ''
     }
   },
 
@@ -54,11 +55,13 @@ export default {
     },
 
     addDept(node) {
+      this.dialogTitle = '添加子部门'
       this.showDialog = true
       this.node = node
     },
 
     editDept(node) {
+      this.dialogTitle = '编辑部门'
       this.showDialog = true
       this.node = node
       this.$refs.addDept.getDepartDetail(this.node.id)
