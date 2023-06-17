@@ -8,7 +8,7 @@
         <template v-slot:after>
           <el-button size="small" type="primary" plain @click="$router.push('/import?type=user')">导入</el-button>
           <el-button size="small" type="success" plain @click="exportData">导出</el-button>
-          <el-button size="small" type="warning" plain @click="showDialog=true">新增员工</el-button>
+          <el-button :disabled="!checkPermission('POINT-ADD-EMPLOYEE')" size="small" type="warning" plain @click="showDialog=true">新增员工</el-button>
         </template>
       </page-tools>
       <el-card>
@@ -75,7 +75,7 @@
               <el-button type="text" size="medium">转正</el-button>
               <el-button type="text" size="medium">调岗</el-button>
               <el-button type="text" size="medium">离职</el-button>
-              <el-button type="text" size="medium">角色</el-button>
+              <el-button type="text" size="medium" @click="editRole(row.id)">角色</el-button>
               <el-button type="text" size="medium" @click="delEmployee(row.id)">删除</el-button>
             </template>
           </el-table-column>
@@ -90,6 +90,7 @@
         </el-row>
       </el-card>
       <add-employee :show-dialog.sync="showDialog" />
+      <assign-role ref="assignRole" :show-role-dialog.sync="showRoleDialog" :user-id="userId" />
     </div>
   </div>
 </template>
@@ -99,9 +100,11 @@ import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees'
 import AddEmployee from './components/add-employee.vue'
 import { formatDate } from '@/filters'
+import AssignRole from './components/assign-role.vue'
 export default {
   components: {
-    AddEmployee
+    AddEmployee,
+    AssignRole
   },
 
   data() {
@@ -113,7 +116,9 @@ export default {
         total: 0
       },
       loading: false,
-      showDialog: false
+      showDialog: false,
+      showRoleDialog: false,
+      userId: null
     }
   },
 
@@ -195,6 +200,12 @@ export default {
           return item[headers[key]]
         })
       })
+    },
+
+    async editRole(id) {
+      this.userId = id
+      await this.$refs.assignRole.getUserDetailById(id)
+      this.showRoleDialog = true
     }
   }
 }

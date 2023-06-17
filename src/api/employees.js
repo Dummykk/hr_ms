@@ -71,3 +71,11 @@ export function updateJob(data) {
     data
   })
 }
+
+export function assignRoles(data) {
+  return request({
+    method: 'PUT',
+    url: '/sys/user/assignRoles',
+    data
+  })
+}
